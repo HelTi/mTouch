@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>touch</title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0-alpha.5/css/bootstrap.css" rel="stylesheet">
+</head>
+<style>
+
+</style>
+<body>
+ <div class="container">
+     <div>
+         <h3>touch</h3>
+     </div>
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="card" id="touch-one">
+                <div class="card-header card-info">
+                    touch1
+                </div>
+
+                    <ul class="list-group">
+                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item">Dapibus ac facilisis in</li>
+                        <li class="list-group-item">Morbi leo risus</li>
+                        <li class="list-group-item">Porta ac consectetur ac</li>
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
+
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="card" id="touch-t">
+                <div class="card-header">
+                    touch2
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">Cras justo odio</li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Morbi leo risus</li>
+                    <li class="list-group-item">Porta ac consectetur ac</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+                </ul>
+            </div>
+            <div id="mtouch">
+                <p>mtouch</p>
+            </div>
+            <button id="myBtn">点我</button>
+        </div>
+    </div>
+ </div>
+</body>
+<script>
+</script>
+<script>
+</script>
+<script src="miniTouch.js"></script>
+<script>
+  console.log(mTouch.touch('#myBtn'))
+  var k=0;
+    mTouch.touch("#mtouch",function(e,touch) {
+        console.log(this);
+        k++;
+        console.log(k)
+    })
+  mTouch.touch("#mtouch",function(e,touch) {
+      console.log(this);
+      k++;
+      console.log(k)
+  }).on('swiper',function(e,touch) {
+      console.log('实时获取');
+  }).on('up',function(e,touch) {
+      console.log('上滑回调');
+  }).on('down',function(e,touch) {
+      console.log('下滑回调');
+  }).on('left',function(e,touch) {
+      console.log('左滑回调');
+  }).on('right',function(e,touch) {
+      console.log('右滑回调');
+  });
+
+</script>
+
+<script>
+
+</script>
+</html>
