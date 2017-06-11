@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div class="main" id="main">
+        <p>main</p>
+        <p class="p"></p>
+    </div>
+    <div class="f">
+        <p>p</p>
+    </div>
+    <div>1212</div>
+</div>
+</body>
+<script src="./mTouch.js"></script>
+<script>
+    mTouch('#main').css('color','pink')
+    console.log(mTouch('#main'))
+    console.log(mTouch('div'))
+    mTouch('p').each(function (i,j) {
+        console.log(i)
+        console.log(mTouch(this))
+    })
+    console.log('###########')
+    console.log(mTouch('.f').next())
+    console.log(mTouch('.f').prev())
+</script>
+</html>
