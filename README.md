@@ -6,36 +6,9 @@
 
  mTouch("selector").css()
  mTouch.each(obj,function(){})
-
-```
-### 关于触摸，由于是使用了别人的库，所以我直接把etuch赋给了mTouch
-
-```
-
-//实例
-  var k=0;
-    mTouch.touch("#mtouch",function(e,touch) {
-        console.log(this);
-        k++;
-        console.log(k)
-    })
-  mTouch.touch("#mtouch",function(e,touch) {
-      console.log(this);
-      k++;
-      console.log(k)
-  }).on('swiper',function(e,touch) {
-      console.log('实时获取');
-  }).on('up',function(e,touch) {
-      console.log('上滑回调');
-  }).on('down',function(e,touch) {
-      console.log('下滑回调');
-  }).on('left',function(e,touch) {
-      console.log('左滑回调');
-  }).on('right',function(e,touch) {
-      console.log('右滑回调');
-  });
-
+ mTouch.each('selector',function(i,j) {
+   console.log(mTouch(this))
+ })
 ```
 ### 感谢以下项目
-[etouch](https://github.com/MeCKodo/eTouch)
 [you dont need jquery](https://github.com/oneuijs/You-Dont-Need-jQuery)
