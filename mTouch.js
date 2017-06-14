@@ -11,16 +11,25 @@
      */
     var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
     var ArrayProto = Array.prototype,
-        ObjProto = Object.prototype;
+        ObjProto = Object.prototype,
+        emptyArry = [];
 
-    var toString = ObjProto.toString,
-        hasOwnProperty = ObjProto.hasOwnProperty;
+    var class2type = {};
 
+    hasOwnProperty = ObjProto.hasOwnProperty;
+    var obj = {};
+    var arr = [];
+    var getProto = Object.getPrototypeOf;
+    var hasOwn = obj.hasOwnProperty;
+    var toString = ObjProto.toString;
+    var fnToString = hasOwn.toString;
+    var ObjectFunctionString = fnToString.call(Object);
     var checkTypeArr = ['Arguments', 'Array', 'Function', 'String', 'Number', 'Date', 'RegExp'];
+
     var mTouch = function (selector, context) {
         return new mTouch.prototype.init(selector, context);
     }
-    mTouch.prototype = {
+    mTouch.fn = mTouch.prototype = {
         constructor: mTouch,
         length: 0,
         selector: '',
@@ -61,10 +70,16 @@
             }
         },
         each: function (callback) {
-            [].every.call(this,function (el,idx) {
-                return callback.call(el,idx,el) !==false;
-            })
-            return this;
+            /* emptyArry.every.call(this, function (el, idx) {
+             return callback.call(el, idx, el) !== false;
+             })
+             return this;*/
+            return mTouch.each(this, callback)
+        },
+        pushStack: function (elems) {
+            var ret = mTouch.merge(this.constructor(), elems);
+            ret.prevObject = this;
+            return ret;
         },
         css: function (attr, val) {
             for (var i = 0; i < this.length; i++) {
@@ -82,52 +97,196 @@
             }
             return this;
         },
-        eq: function (num) {
-            num = num < 0 ? (this.length - 1) : num;
-            return new mTouch(this[num]);
+        eq: function (i) {
+            var len = this.length,
+                j = +i + (i < 0 ? len : 0);
+            return this.pushStack(j >= 0 && j < len ? [this[j]] : []);
         },
-        next: function () {
-            return sibling(this[0], 'nextSibling');
+        first: function () {
+            return this.eq(0);
         },
-        prev: function () {
-            return sibling(this[0], 'previousSibling');
+        last: function () {
+            return this.eq(-1);
+        },
+        end: function () {
+            return this.prevObject || this.constructor();
         }
     }
 
+    /**
+     *
+     * @param fn
+     * @returns {boolean}
+     *
+     */
+    function isFunction(fn) {
+        return toString.call(fn) === '[object Function]';
+    }
+
+    //
+    function isPlainObject(obj) {
+        var proto, Ctor;
+        if (!obj || toString.call(obj) !== "[object Object]") {
+            return false;
+        }
+        proto = getProto(obj);
+        if (!proto) {
+            return false;
+        }
+        Ctor = hasOwn.call(proto, "constructor") && proto.constructor;
+        return typeof Ctor === "function" && fnToString.call(Ctor) === ObjectFunctionString;
+    }
+
+    /**
+     *
+     * @type {*} 经典的 prototype
+     */
     mTouch.prototype.init.prototype = mTouch.prototype;
-    //转化为 mTouch 对象
-    function toMtouch() {
-        return mTouch(arguments)
-    }
 
-    function flatten(arr, owner) {
+    mTouch.fn = mTouch.prototype;
+    /**
+     *
+     * @type {mTouch.extend}
+     * 深复制，浅复制
+     */
+    mTouch.extend = mTouch.fn.extend = function () {
+        var options, name, src, copy, copyIsArray, clone,
+            target = arguments[0] || {},
+            i = 1,
+            length = arguments.length,
+            deep = false;
+        if (typeof target === "boolean") {
+            deep = target;
+            target = arguments[i] || {};
+            i++;
+        }
+        if (typeof target !== "object" && !isFunction(target)) {
+            target = {};
+        }
+        if (i === length) {
+            target = this;
+            i--;
+        }
+        for (; i < length; i++) {
+            if ((options = arguments[i]) != null) {
+                for (name in options) {
+                    src = target[name];
+                    copy = options[name];
+                    if (target === copy) {
+                        continue;
+                    }
 
-    }
+                    if (deep && copy && (isPlainObject(copy) ||
+                        (copyIsArray = Array.isArray(copy)))) {
+                        if (copyIsArray) {
+                            copyIsArray = false;
+                            clone = src && Array.isArray(src) ? src : [];
+                        } else {
+                            clone = src && isPlainObject(src) ? src : {};
+                        }
+                        target[name] = extend(deep, clone, copy);
+                    } else if (copy !== undefined) {
+                        target[name] = copy;
+                    }
 
-    mTouch.each = function (obj, callback) {
-        var length, i = 0;
-        if (mTouch.isArray(obj)) {
-            length = obj.length;
-            for (; i < length; i++) {
-                if (callback.call(obj[i], i, obj[i]) === false) {
-                    return obj
-                }
-            }
-        } else {
-            for (i in obj) {
-                if (callback.call(obj[i], i, obj[i]) === false) {
-                    return obj
                 }
             }
         }
-        return obj;
+        return target;
     }
+
+    mTouch.extend({
+        isReady: true,
+        error: function (msg) {
+            throw new Error(msg);
+        },
+        each: function (obj, callback) {
+            var length, i = 0;
+
+            if (isArrayLike(obj)) {
+                length = obj.length;
+                for (; i < length; i++) {
+                    if (callback.call(obj[i], i, obj[i]) === false) {
+                        break;
+                    }
+                }
+            } else {
+                for (i in obj) {
+                    if (callback.call(obj[i], i, obj[i]) === false) {
+                        break;
+                    }
+                }
+            }
+
+            return obj;
+        },
+        type: function (obj) {
+            if (obj == null) {
+                return obj + "";
+            }
+
+            // Support: Android <=2.3 only (functionish RegExp)
+            return typeof obj === "object" || typeof obj === "function" ?
+                class2type[toString.call(obj)] || "object" :
+                typeof obj;
+        },
+        isWindow: function (obj) {
+            return obj != null && obj === obj.window;
+        },
+        merge: function (first, second) {
+            var len = +second.length,
+                j = 0,
+                i = first.length;
+            for (; j < len; j++) {
+                first[i++] = second[j];
+            }
+            first.length = i;
+            return first;
+        }
+    })
+
+    /*class*/
+
+/*    mTouch.extend({
+        forEach: emptyArray.forEach,
+        reduce: emptyArray.reduce,
+        push: emptyArray.push,
+        sort: emptyArray.sort,
+        splice: emptyArray.splice,
+        indexOf: emptyArray.indexOf
+    })*/
+
+    function isArrayLike(obj) {
+        var length = !!obj && "length" in obj && obj.length,
+            type = mTouch.type(obj);
+
+        if (type === "function" || mTouch.isWindow(obj)) {
+            return false;
+        }
+        return type === "array" || length === 0 ||
+            typeof length === "number" && length > 0 && (length - 1) in obj;
+    }
+
     /*相邻元素*/
-    function sibling(ele, pOrN) {
-        while ((ele = ele[pOrN]) && ele.nodeType !== 1) {
+    /*   function sibling(ele, pOrN) {
+     while ((ele = ele[pOrN]) && ele.nodeType !== 1) {
 
+     }
+     return ele
+     }*/
+    var siblings = function (n, elem) {
+        var matched = [];
+        for (; n; n = n.nextSibling) {
+            if (n.nodeType === 1 && n !== elem) {
+                matched.push(n);
+            }
         }
-        return ele
+        return matched;
+    }
+
+    function sibling(cur,dir) {
+        while ((cur = cur[dir]) && cur.nodeType !==1){}
+        return cur
     }
 
     /*document ready*/
