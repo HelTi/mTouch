@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <div class="main" id="main">
+        <p>main</p>
+        <p class="p"></p>
+    </div>
+    <div class="f">
+        <p>p</p>
+    </div>
+    <div>1212</div>
+</div>
+</body>
+<script src="./mTouch.js"></script>
+<script>
+    mTouch('#main').css('color', 'pink')
+    console.log(mTouch('#main'))
+    mTouch('div').css("background", "yellow");
+    console.log(mTouch('div'))
+    /*   mTouch('p').each(function (i, j) {
+     console.log(i)
+     console.log(mTouch(this))
+     mTouch(this).css('background', 'red')
+     })*/
+    console.log('###########')
+    console.log(mTouch('p').eq(0))
+    mTouch('p').eq(2).css('font-size','30px')
+    /*添加class*/
+    mTouch('p').addClass('h j k')
+    mTouch('p').removeClass('h j')
+</script>
+</html>

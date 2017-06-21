@@ -110,6 +110,43 @@
         },
         end: function () {
             return this.prevObject || this.constructor();
+        },
+        addClass: function (cls) {
+            var clss = cls.split(' ');
+            console.log(clss);
+            for (var i = 0; i < this.length; i++) {
+                var _this = this[i];
+                clss.forEach(function (item) {
+                    _this.classList.add(item)
+                })
+            }
+        },
+        removeClass: function (cls) {
+            var clss = cls.split(' ');
+            console.log(clss);
+            for (var i = 0; i < this.length; i++) {
+                var _this = this[i];
+                clss.forEach(function (item) {
+                    _this.classList.remove(item)
+                })
+            }
+        },
+        toogleClass: function (cls, bool) {
+            var arglen = arguments.length;
+            for (var i = 0; i < this.length; i++) {
+                var _this = this;
+                if (arglen === 1) {
+                    _this.classList.toggle(cls);
+                } else {
+                    _this.classList.toggle(cls, bool);
+                }
+            }
+        },
+        hasClass:function (cls) {
+            for(var i=0;i<this.length;i++){
+                var _this=this;
+                return _this.classList.contains(cls);
+            }
         }
     }
 
@@ -245,16 +282,6 @@
         }
     })
 
-    /*class*/
-
-/*    mTouch.extend({
-        forEach: emptyArray.forEach,
-        reduce: emptyArray.reduce,
-        push: emptyArray.push,
-        sort: emptyArray.sort,
-        splice: emptyArray.splice,
-        indexOf: emptyArray.indexOf
-    })*/
 
     function isArrayLike(obj) {
         var length = !!obj && "length" in obj && obj.length,
@@ -284,8 +311,9 @@
         return matched;
     }
 
-    function sibling(cur,dir) {
-        while ((cur = cur[dir]) && cur.nodeType !==1){}
+    function sibling(cur, dir) {
+        while ((cur = cur[dir]) && cur.nodeType !== 1) {
+        }
         return cur
     }
 
