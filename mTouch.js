@@ -13,7 +13,6 @@
     var ArrayProto = Array.prototype,
         ObjProto = Object.prototype,
         emptyArry = [];
-
     var class2type = {};
 
     hasOwnProperty = ObjProto.hasOwnProperty;
@@ -189,8 +188,8 @@
                 var select = null;
                 var isId = (selectDom.charAt(0) === '#' ? true : false);
                 var isClass = (selectDom.charAt(0) === '.' ? true : false);
-         /*       console.log(isId)
-                console.log(isClass)*/
+                /*       console.log(isId)
+                 console.log(isClass)*/
                 if (isId || isClass) {
                     selectDom = mTouch.trim(selectDom);
                     select = selectDom.substring(1);
@@ -199,8 +198,8 @@
                             that[i].addEventListener(EventType, function (e) {
                                 console.log('id');
                                 var target = e.target;
-                                if(target.id===select){
-                                    callback.call(this,e);
+                                if (target.id === select) {
+                                    callback.call(this, e);
                                 }
                             }, false)
                         }
@@ -210,26 +209,25 @@
                             that[i].addEventListener(EventType, function (e) {
                                 console.log('class');
                                 var target = e.target;
-                                if(target.className===select){
-                                    callback.call(this,e);
+                                if (target.className === select) {
+                                    callback.call(this, e);
                                 }
                             }, false)
                         }
                     }
                 } else {
-                    for(var i =0;i<that.length;i++){
-                        that[i].addEventListener(EventType,function (e) {
+                    for (var i = 0; i < that.length; i++) {
+                        that[i].addEventListener(EventType, function (e) {
                             var target = e.target;
-                            if(target.nodeName.toLowerCase()=== selectDom){
-                               callback.call(this,e);
+                            if (target.nodeName.toLowerCase() === selectDom) {
+                                callback.call(this, e);
                             }
-                        },false)
+                        }, false)
                     }
                 }
             }
         }
     }
-
     /**
      *
      * @param fn
@@ -425,5 +423,5 @@
             return toString.call(obj) === '[object ' + type + ']';
         }
     });
-    window.mTouch = mTouch;
+    window.m = window.mTouch = mTouch;
 })(window, document);
