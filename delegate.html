@@ -14,6 +14,23 @@
         <li>e</li>
     </ul>
 </div>
+<div id="s1">
+    <div id="s2">s2</div>
+</div>
+<div class="eve">
+  <div class="eve2">
+      eve2
+  </div>
+</div>
+<div class="eve">
+    <p id="pa" class="pa">a</p>
+    <p class="pb">b</p>
+    <p>c</p>
+    <ul>
+        <li id="la" class="la">li1</li>
+        <li>li2</li>
+    </ul>
+</div>
 </body>
 <script>
 var ul=document.getElementById('ul');
@@ -25,15 +42,66 @@ var ul=document.getElementById('ul');
     }
     //alert(this.innerHTML)
 },false)*/
-//    function delegate(agent,evType,selector,callback) {
-//
-//         document.querySelectorAll(agent).addEventListener(evType,function (e) {
-//             var dom=document.querySelectorAll(selector);
-//             console.log(dom);
-//         },false)
-//    }
-//    delegate('ul','click','li',function () {
-//
-//    })
+var s1=document.getElementById('s1');
+var s2=document.getElementById('s2');
+var as1=document.querySelectorAll('#s1');
+var eves=document.querySelectorAll('.eve');
+/*console.log(eves)
+console.log(as1);*/
+/*eves.forEach(function (item,value) {
+    item.addEventListener('click',function (e) {
+        //console.log(e.target.nodeName)
+        console.log(e)
+        var target=e.target;
+        console.log('nodename:'+target.nodeName);
+        console.log('classname:'+target.className);
+        console.log('id:'+target.getAttribute('id'))
+    })
+});*/
+for(var i in eves){
+    eves[i].addEventListener('click',function (e) {
+        //console.log(e.target.nodeName)
+        console.log(e)
+        var target=e.target;
+        console.log('nodename:'+target.nodeName);
+        console.log('classname:'+target.className);
+        if(target.id !==''){
+            console.log('id:'+target.id)
+        }
+
+    },false)
+}
+//使用addEventListener
+function on(evenetType,selectorDom,agentDom,callback) {
+     var agent=document.querySelectorAll(agentDom);
+     var agentlen=arglen.length;
+     var selector;
+     var arglen=arguments.length;
+     var cb=null;
+     if(isFunction(selectorDom)){
+         cb=selectorDom
+     }
+     if (arglen ===2){
+         if(agentlen === 1){
+             agent.addEventListener()
+         }
+         
+     }else if(arglen ===3){
+         
+     }
+     
+}
+var ObjProto=Object.prototype;
+var toString=ObjProto.toString;
+function isFunction(fn) {
+    return toString.call(fn) === '[object Function]'
+}
+s1.addEventListener("click",function () {
+    console.log("s1事件冒泡")
+},false)
+s2.addEventListener("click",function (e) {
+    console.log(e)
+    console.log("s2 事件捕获 ")
+},true)
 </script>
 </html>

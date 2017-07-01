@@ -40,6 +40,7 @@
             }
             var elems;
             if (typeof selector === 'object') {
+                console.log('object')
                 this.selector = [selector];
                 for (var i = 0; i < selector.length; i++) {
                     this[i] = selector[i];
@@ -113,7 +114,6 @@
         },
         addClass: function (cls) {
             var clss = cls.split(' ');
-            console.log(clss);
             for (var i = 0; i < this.length; i++) {
                 var _this = this[i];
                 clss.forEach(function (item) {
@@ -142,10 +142,37 @@
                 }
             }
         },
-        hasClass:function (cls) {
-            for(var i=0;i<this.length;i++){
-                var _this=this;
+        hasClass: function (cls) {
+            for (var i = 0; i < this.length; i++) {
+                var _this = this;
                 return _this.classList.contains(cls);
+            }
+        },
+        on: function (EventType, agentDom, callback) {
+            //当agentDom为function时赋值给cb
+            console.log('on-----')
+            //console.log(this);
+            var cb=null;
+            var agent=null;
+            //var agentlen=agent.length;
+            var arglen=arguments.length;
+            if(isFunction(agentDom)){
+                cb=agentDom;
+            }else{
+                agent=document.querySelectorAll(agentDom)
+            }
+            /*
+            * 当第二个参数为函数时，不设置代理，把agentDom赋给cb;
+            * */
+            if(arglen ===2){
+                //遍历selector,用addEventListener添加
+                for(var i =0;i<this.length;i++){
+                    var _this=this[i];
+                    //console.log(_this)
+                    _this.addEventListener(EventType,agentDom,false)
+                }
+            }else if(arglen ===3){
+
             }
         }
     }

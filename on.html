@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>on</title>
+    <script src="./mTouch.js"></script>
+</head>
+<body>
+<div id="main">
+    <ul id="ul">
+        <li>a</li>
+        <li>b</li>
+        <li>c</li>
+        <li>d</li>
+        <li>e</li>
+    </ul>
+</div>
+<div id="s1">
+    <div id="s2">s2</div>
+</div>
+<div class="eve">
+    <div class="eve2">
+        eve2
+    </div>
+</div>
+<div class="eve">
+    <p id="pa" class="pa">a</p>
+    <p class="pb">b</p>
+    <p>c</p>
+    <ul>
+        <li id="la" class="la">li1</li>
+        <li>li2</li>
+    </ul>
+</div>
+</body>
+<script>
+    console.log('############mtouch')
+ /*   console.log(mTouch('#main'));
+    mTouch('#main').on('click',function (e) {
+        console.log('haha')
+        console.log(e);
+    })*/
+    mTouch('.eve').on('click',function (e) {
+        console.log(mTouch(this));
+        mTouch(this).css('color','red')
+    })
+ /*   console.log(document.querySelectorAll('p'))
+    console.log(typeof (document.querySelectorAll('p')))*/
+</script>
+</html>
