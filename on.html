@@ -40,11 +40,19 @@
         console.log('haha')
         console.log(e);
     })*/
-    mTouch('.eve').on('click',function (e) {
+  /*  mTouch('.eve').on('click',function (e) {
         console.log(mTouch(this));
         mTouch(this).css('color','red')
-    })
+    })*/
  /*   console.log(document.querySelectorAll('p'))
     console.log(typeof (document.querySelectorAll('p')))*/
+    mTouch('.eve').on('click','.eve2',function (e) {
+        console.log(e);
+        console.log('哎呀，找到我了！')
+    })
+ mTouch('.eve').on('click','p',function (e) {
+     console.log(e);
+      console.log('哎呀，找到我了！')
+ })
 </script>
 </html>

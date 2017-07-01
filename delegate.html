@@ -48,7 +48,7 @@ var as1=document.querySelectorAll('#s1');
 var eves=document.querySelectorAll('.eve');
 /*console.log(eves)
 console.log(as1);*/
-/*eves.forEach(function (item,value) {
+eves.forEach(function (item,value) {
     item.addEventListener('click',function (e) {
         //console.log(e.target.nodeName)
         console.log(e)
@@ -57,8 +57,14 @@ console.log(as1);*/
         console.log('classname:'+target.className);
         console.log('id:'+target.getAttribute('id'))
     })
-});*/
-for(var i in eves){
+});
+console.log(eves)
+console.log('nodelist')
+console.log(isNodeList(eves))
+console.log(isNodeList(as1))
+console.log(isNode(as1));
+console.log(isNode(s1));
+/*for(var i in eves){
     eves[i].addEventListener('click',function (e) {
         //console.log(e.target.nodeName)
         console.log(e)
@@ -70,8 +76,14 @@ for(var i in eves){
         }
 
     },false)
-}
+}*/
 //使用addEventListener
+function isNodeList(val) {
+    return val instanceof window.NodeList || val instanceof NodeList || val instanceof window.HTMLCollection || val instanceof Array
+}
+function isNode(val) {
+    return val instanceof window.Node
+}
 function on(evenetType,selectorDom,agentDom,callback) {
      var agent=document.querySelectorAll(agentDom);
      var agentlen=arglen.length;

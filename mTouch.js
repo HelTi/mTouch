@@ -40,12 +40,21 @@
             }
             var elems;
             if (typeof selector === 'object') {
-                console.log('object')
-                this.selector = [selector];
-                for (var i = 0; i < selector.length; i++) {
-                    this[i] = selector[i];
+                /* this.selector = [selector];*/
+                /* console.log('object');
+                 console.log(isNodeList(selector))
+                 console.log(isNode(selector))*/
+                var i = 0;
+                if (isNode(selector)) {
+                    this[0] = selector;
+                    this.length = 1;
+                } else if (isNodeList(selector)) {
+                    selector.forEach(function (item) {
+                        this[i] = item;
+                        i++;
+                    })
+                    this.length = i;
                 }
-                this.length = selector.length;
                 return this;
             } else if (typeof selector === 'string') {
                 if (selector.charAt(0) === '#' && !selector.match('\\s')) {
@@ -114,6 +123,7 @@
         },
         addClass: function (cls) {
             var clss = cls.split(' ');
+            console.log(clss);
             for (var i = 0; i < this.length; i++) {
                 var _this = this[i];
                 clss.forEach(function (item) {
@@ -148,31 +158,74 @@
                 return _this.classList.contains(cls);
             }
         },
-        on: function (EventType, agentDom, callback) {
+        on: function (EventType, selectDom, callback) {
             //当agentDom为function时赋值给cb
             console.log('on-----')
-            //console.log(this);
-            var cb=null;
-            var agent=null;
+            var cb = null;
+            var agent = null;
             //var agentlen=agent.length;
-            var arglen=arguments.length;
-            if(isFunction(agentDom)){
-                cb=agentDom;
-            }else{
-                agent=document.querySelectorAll(agentDom)
+            var arglen = arguments.length;
+            //为了获取 this.selector
+            var that = this;
+            if (isFunction(selectDom)) {
+                cb = selectDom;
             }
+            /*  else {
+             //要触发的dom集合
+             selects = document.querySelectorAll(selectDom)
+             }*/
             /*
-            * 当第二个参数为函数时，不设置代理，把agentDom赋给cb;
-            * */
-            if(arglen ===2){
+             * 当第二个参数为函数时，不设置代理，把selectDom赋给cb;
+             * */
+            if (arglen === 2) {
                 //遍历selector,用addEventListener添加
-                for(var i =0;i<this.length;i++){
-                    var _this=this[i];
-                    //console.log(_this)
-                    _this.addEventListener(EventType,agentDom,false)
+                for (var i = 0; i < this.length; i++) {
+                    var _this = this[i];
+                    console.log(_this)
+                    _this.addEventListener(EventType, cb, false)
                 }
-            }else if(arglen ===3){
-
+            } else if (arglen === 3) {
+                //判断 selector是否为id，或者.calss
+                var select = null;
+                var isId = (selectDom.charAt(0) === '#' ? true : false);
+                var isClass = (selectDom.charAt(0) === '.' ? true : false);
+         /*       console.log(isId)
+                console.log(isClass)*/
+                if (isId || isClass) {
+                    selectDom = mTouch.trim(selectDom);
+                    select = selectDom.substring(1);
+                    if (isId) {
+                        for (var i = 0; i < that.length; i++) {
+                            that[i].addEventListener(EventType, function (e) {
+                                console.log('id');
+                                var target = e.target;
+                                if(target.id===select){
+                                    callback.call(this,e);
+                                }
+                            }, false)
+                        }
+                    }
+                    if (isClass) {
+                        for (var i = 0; i < that.length; i++) {
+                            that[i].addEventListener(EventType, function (e) {
+                                console.log('class');
+                                var target = e.target;
+                                if(target.className===select){
+                                    callback.call(this,e);
+                                }
+                            }, false)
+                        }
+                    }
+                } else {
+                    for(var i =0;i<that.length;i++){
+                        that[i].addEventListener(EventType,function (e) {
+                            var target = e.target;
+                            if(target.nodeName.toLowerCase()=== selectDom){
+                               callback.call(this,e);
+                            }
+                        },false)
+                    }
+                }
             }
         }
     }
@@ -185,6 +238,16 @@
      */
     function isFunction(fn) {
         return toString.call(fn) === '[object Function]';
+    }
+
+    //使用document.querySelectorAll(),返回NodeList
+    function isNodeList(val) {
+        return val instanceof window.NodeList || val instanceof NodeList || val instanceof window.HTMLCollection || val instanceof Array
+    }
+
+    //单个节点，常见的是document.getElementById返回的类型
+    function isNode(val) {
+        return val instanceof window.Node;
     }
 
     //
