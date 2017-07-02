@@ -48,11 +48,12 @@
     console.log(typeof (document.querySelectorAll('p')))*/
     mTouch('.eve').on('click','.eve2',function (e) {
         console.log(e);
-        console.log('哎呀，找到我了！')
+        console.log('哎呀，找到我了！我是‘.eve2')
     })
- m('.eve').on('click','p',function (e) {
-     console.log(e);
-      console.log('哎呀，找到我了！')
+    m('.eve').on('click','p',function (e) {
+      console.log(e);
+      console.log('哎呀，找到我了！我是p元素')
  })
+    mTouch('.eve').off('click');
 </script>
 </html>

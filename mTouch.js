@@ -24,7 +24,7 @@
     var fnToString = hasOwn.toString;
     var ObjectFunctionString = fnToString.call(Object);
     var checkTypeArr = ['Arguments', 'Array', 'Function', 'String', 'Number', 'Date', 'RegExp'];
-
+    var Events=[];
     var mTouch = function (selector, context) {
         return new mTouch.prototype.init(selector, context);
     }
@@ -188,44 +188,78 @@
                 var select = null;
                 var isId = (selectDom.charAt(0) === '#' ? true : false);
                 var isClass = (selectDom.charAt(0) === '.' ? true : false);
-                /*       console.log(isId)
-                 console.log(isClass)*/
                 if (isId || isClass) {
                     selectDom = mTouch.trim(selectDom);
                     select = selectDom.substring(1);
+                    cb=callback;
                     if (isId) {
+
+                        callback=function (e) {
+                           // console.log('id');
+                            var target=e.target;
+                            if(target.id===select){
+                                cb.call(this,e)
+                            }
+                        }
                         for (var i = 0; i < that.length; i++) {
-                            that[i].addEventListener(EventType, function (e) {
-                                console.log('id');
-                                var target = e.target;
-                                if (target.id === select) {
-                                    callback.call(this, e);
-                                }
-                            }, false)
+                            that[i].addEventListener(EventType, callback, false);
+                            Events.push({
+                                el:that[i],
+                                eventType:EventType,
+                                callback:callback
+                            })
                         }
                     }
                     if (isClass) {
+
+                        callback = function (e) {
+                           // console.log('class');
+                            var target = e.target;
+                            if (target.className === select) {
+                                cb.call(this, e);
+                            }
+                        }
                         for (var i = 0; i < that.length; i++) {
-                            that[i].addEventListener(EventType, function (e) {
-                                console.log('class');
-                                var target = e.target;
-                                if (target.className === select) {
-                                    callback.call(this, e);
-                                }
-                            }, false)
+                            that[i].addEventListener(EventType, callback, false)
+                            Events.push({
+                                el:that[i],
+                                eventType:EventType,
+                                callback:callback
+                            })
                         }
                     }
                 } else {
-                    for (var i = 0; i < that.length; i++) {
-                        that[i].addEventListener(EventType, function (e) {
-                            var target = e.target;
-                            if (target.nodeName.toLowerCase() === selectDom) {
-                                callback.call(this, e);
-                            }
-                        }, false)
+                    cb=callback;
+                    callback = function (e) {
+                       /* console.log('node');*/
+                        var target = e.target;
+                        if (target.nodeName.toLowerCase() === selectDom) {
+                            cb.call(this, e);
+                        }
                     }
+                    for (var i = 0; i < that.length; i++) {
+                        that[i].addEventListener(EventType, callback, false);
+                        Events.push({
+                            el:that[i],
+                            eventType:EventType,
+                            callback:callback
+                        })
+                    }
+                    console.log(Events)
                 }
             }
+        },
+        off: function (EventType,callback) {
+            var _this=this;
+           for(var i=0;i<this.length;i++){
+              Events.forEach(function (item,j) {
+                  console.log(i)
+                  console.log(item['el']);
+                  if(item['el'] === _this[i]){
+                      _this[i].removeEventListener(item['eventType'],item['callback'])
+                  }
+              })
+           }
         }
     }
     /**
