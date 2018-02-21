@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <p id="p">click</p>
+</div>
+</body>
+<script>
+  function dispatch(targetNode, eventName, detail) {
+    var event = document.createEvent('CustomEvent');
+    if (event && event.initCustomEvent) {
+      event.initCustomEvent('on:' + eventName, true, true, detail);
+    } else {
+      event = document.createEvent('Event');
+      event.initEvent('on:' + eventName, true, true)
+      event.detail = detail;
+    }
+    return targetNode.dispatchEvent(event)
+  }
+
+  var ele = document.getElementById('p');
+  console.log(ele)
+  ele.addEventListener('on:view', function (e) {
+    console.log(e);
+    console.log('view');
+  }, false);
+  dispatch(ele, 'view')
+</script>
+<script>
+  var div = document.createElement('div');
+  console.log({}.toString.call(div))
+  var touch = 'ontouchstart' in div;
+  var ot = 'onorientationchange' in window;
+</script>
+</html>
