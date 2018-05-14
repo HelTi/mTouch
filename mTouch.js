@@ -94,9 +94,9 @@
       for (var i = 0; i < this.length; i++) {
         if (typeof attr === 'string') {
           if (arguments.length === 1) {
-            return getComputedStyle(this[i], null)[attr];
+            return getStyle(this[i],val);
           }
-          this[i].style[attr] = val;
+          setStyle(this[i],attr,val);
         } else {
           var _this = this[i];
           mTouch.each(attr, function (attr, val) {
@@ -261,6 +261,38 @@
         })
       }
     }
+  }
+
+  /**
+   * 设置样式
+   * @param element
+   * @param styleAttr
+   * @param value
+   */
+  function setStyle(element, styleAttr, value) {
+    if (!element || !styleAttr){
+      throw new Error('no element,styleAttr');
+    }
+    if (typeof styleAttr === 'object') {
+      for (var prop in styleAttr) {
+        if(styleAttr.hasOwnProperty(prop)) {
+          setStyle(element, prop, styleAttr[prop]);
+        }
+      }
+    } else {
+      element.style[styleAttr] = value;
+    }
+  }
+
+  /**
+   * 获取dom样式
+   */
+  function getStyle(element,styleAttr) {
+    if(!element || !styleAttr){
+      throw new Error('no element and styleAttr variable');
+    }
+    var computedStyle = document.defaultView.getComputedStyle(element,null);
+    return element.style[styleAttr] || computedStyle ? computedStyle[styleAttr] : null;
   }
 
   /**
@@ -446,7 +478,7 @@
    }
    return ele
    }*/
-  var siblings = function (n, elem) {
+  var siblings = function siblings (n, elem) {
     var matched = [];
     for (; n; n = n.nextSibling) {
       if (n.nodeType === 1 && n !== elem) {

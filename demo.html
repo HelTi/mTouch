@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-    <div class="main" id="main">
+    <div class="main" id="main" style="font-size: 16px;">
         <p>main</p>
         <p class="p"></p>
     </div>
@@ -128,5 +128,15 @@
     mTouch.each(options,function (i,j) {
         console.log(i)
     })
+</script>
+<script>
+  /**
+   * 样式
+   */
+  console.log('///style');
+  var mainDom = document.getElementById('main');
+  var mainStyles = document.defaultView.getComputedStyle(mainDom,null)['font-size'];
+  console.log(mainStyles)
+
 </script>
 </html>
